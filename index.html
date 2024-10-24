@@ -105,27 +105,25 @@
         document.getElementById('viewMapButton').style.display = 'none';
 
         if (navigator.geolocation) {
-            navigator.geolocation.watchPosition(
+            navigator.geolocation.getCurrentPosition(
                 (position) => {
                     const pos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude,
                     };
 
-                    if (!userMarker) {
-                        userMarker = L.circleMarker(pos, {
-                            radius: 8,
-                            fillColor: '#ff0000',
-                            color: '#ff0000',
-                            weight: 1,
-                            opacity: 1,
-                            fillOpacity: 1
-                        }).addTo(map);
-                    } else {
-                        userMarker.setLatLng(pos);
-                    }
-
+                    // Centra el mapa en la ubicación del usuario
                     map.setView(pos, 15);
+
+                    // Marca la ubicación del usuario
+                    userMarker = L.circleMarker(pos, {
+                        radius: 8,
+                        fillColor: '#ff0000',
+                        color: '#ff0000',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 1
+                    }).addTo(map);
                 },
                 () => {
                     alert('Error al obtener la ubicación.');
@@ -136,12 +134,15 @@
         }
     }
 
+    // Llama a showMap cuando se carga la página
+    window.onload = showMap;
+
     function generateQRCode() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const url = `https://yourdomain.com/map?lat=${lat}&lon=${lon}`; // Cambia esto a tu dominio
+                const url = `https://andreweb10.github.io/delivery/`; // Cambia esto a tu dominio
                 $('#qrcode').empty(); // Limpia el contenedor de QR
                 const qrcode = new QRCode(document.getElementById("qrcode"), {
                     text: url,
