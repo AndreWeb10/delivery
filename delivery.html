@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa en Tiempo Real</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-image: url('https://img.freepik.com/foto-gratis/repartidor-alimentos-conduciendo-scooter-caja-comida-mascara-mascara_1303-27713.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        header {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        nav {
+            margin: 10px;
+        }
+        nav a {
+            margin: 0 15px;
+            color: white;
+            text-decoration: none;
+        }
+        #map {
+            flex: 1;
+            width: 100%;
+            display: none;
+        }
+        #search {
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+        }
+        #search button {
+            padding: 10px;
+            margin-left: 5px;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(241, 241, 241, 0.8);
+        }
+        #viewMapButton {
+            margin: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #qrcode {
+            margin: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ubicación del pedido</h1>
+    <nav>
+        <a href="#map" onclick="showMap()">Mapa</a>
+    </nav>
+</header>
+
+<div id="search">
+    <button onclick="generateQRCode()">Generar Código QR</button>
+</div>
+
+<div id="qrcode"></div>
+
+<button id="viewMapButton" onclick="showMap()">Ver Mapa</button>
+
+<div id="map"></div>
+
+<footer>
+    <p>&copy; 2024 Mapa en Tiempo Real</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    const map = L.map('map').setView([0, 0], 2);
+    let userMarker;
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    function showMap() {
+        document.getElementById('map').style.display = 'block';
+        document.getElementById('viewMapButton').style.display = 'none';
+
+        if (navigator.geolocation) {
+            navigator.geolocation.watchPosition(
+                (position) => {
+                    const pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    };
+
+                    if (!userMarker) {
+                        userMarker = L.circleMarker(pos, {
+                            radius: 8,
+                            fillColor: '#ff0000',
+                            color: '#ff0000',
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 1
+                        }).addTo(map);
+                    } else {
+                        userMarker.setLatLng(pos);
+                    }
+
+                    map.setView(pos, 15);
+                },
+                () => {
+                    alert('Error al obtener la ubicación.');
+                }
+            );
+        } else {
+            alert('La geolocalización no es compatible con este navegador.');
+        }
+    }
+
+    function generateQRCode() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const url = `https://yourdomain.com/map?lat=${lat}&lon=${lon}`; // Cambia esto a tu dominio
+                $('#qrcode').empty(); // Limpia el contenedor de QR
+                const qrcode = new QRCode(document.getElementById("qrcode"), {
+                    text: url,
+                    width: 128,
+                    height: 128,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            });
+        } else {
+            alert('La geolocalización no es compatible con este navegador.');
+        }
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+
