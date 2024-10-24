@@ -142,8 +142,8 @@
             navigator.geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const url = `https://andreweb10.github.io/delivery/`; // Cambia esto a tu dominio
-                $('#qrcode').empty(); // Limpia el contenedor de QR
+                const url = `https://andreweb10.github.io/infodelivery/#map`; 
+                $('#qrcode').empty(); 
                 const qrcode = new QRCode(document.getElementById("qrcode"), {
                     text: url,
                     width: 128,
