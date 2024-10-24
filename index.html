@@ -142,7 +142,7 @@
             navigator.geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const url = `https://andreweb10.github.io/infodelivery/#map`; 
+                const url = `https://andreweb10.github.io/infodelivery/`; 
                 $('#qrcode').empty(); 
                 const qrcode = new QRCode(document.getElementById("qrcode"), {
                     text: url,
