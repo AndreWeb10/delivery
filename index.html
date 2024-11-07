@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa en Tiempo Real Del Pedido</title>
+    <title>Mapa en Tiempo Real</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
@@ -70,7 +70,7 @@
 <body>
 
 <header>
-    <h1>Ubicación del pedido                 Tel: 978622310</h1>
+    <h1>Ubicación del pedido</h1>
     <nav>
         <a href="#map" onclick="showMap()">Mapa</a>
     </nav>
@@ -92,14 +92,16 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    const map = L.map('map').setView([0, 0], 2);
+    const map = L.map('map').setView([0, 0], 2); // Inicializa el mapa con un zoom bajo
+
     let userMarker;
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
+    // Capa de CartoDB (light_all)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://carto.com/attributions">CartoDB</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
+    // Función para mostrar el mapa
     function showMap() {
         document.getElementById('map').style.display = 'block';
         document.getElementById('viewMapButton').style.display = 'none';
@@ -137,13 +139,14 @@
     // Llama a showMap cuando se carga la página
     window.onload = showMap;
 
+    // Función para generar un código QR con la URL que incluye lat y lon
     function generateQRCode() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const url = `https://andreweb10.github.io/infodelivery/`; 
-                $('#qrcode').empty(); 
+                const url = `https://andreweb10.github.io/delivery/`; // Cambia esto a tu dominio y página
+                $('#qrcode').empty(); // Limpia el contenedor de QR
                 const qrcode = new QRCode(document.getElementById("qrcode"), {
                     text: url,
                     width: 128,
@@ -161,7 +164,6 @@
 
 </body>
 </html>
-
 
 
 
