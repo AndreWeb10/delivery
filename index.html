@@ -36,7 +36,7 @@
         #map {
             flex: 1;
             width: 100%;
-            display: none;
+            height: 100%;
         }
         #search {
             margin: 10px;
@@ -92,20 +92,25 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    const map = L.map('map').setView([0, 0], 2); // Inicializa el mapa con un zoom bajo
-
+    // Inicializamos el mapa con una ubicación predeterminada (Centro del mundo)
+    const map = L.map('map').setView([0, 0], 2);
     let userMarker;
 
-    // Capa de CartoDB (light_all)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://carto.com/attributions">CartoDB</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Función para mostrar el mapa
+    // Mostrar el mapa inmediatamente sin esperar la ubicación
+    window.onload = function() {
+        showMap();
+    };
+
     function showMap() {
         document.getElementById('map').style.display = 'block';
         document.getElementById('viewMapButton').style.display = 'none';
 
+        // Intentar obtener la ubicación del usuario
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -114,18 +119,22 @@
                         lng: position.coords.longitude,
                     };
 
-                    // Centra el mapa en la ubicación del usuario
+                    // Centrar el mapa en la ubicación del usuario
                     map.setView(pos, 15);
 
-                    // Marca la ubicación del usuario
-                    userMarker = L.circleMarker(pos, {
-                        radius: 8,
-                        fillColor: '#ff0000',
-                        color: '#ff0000',
-                        weight: 1,
-                        opacity: 1,
-                        fillOpacity: 1
-                    }).addTo(map);
+                    // Colocar un marcador en la ubicación del usuario
+                    if (userMarker) {
+                        userMarker.setLatLng(pos); // Si ya existe el marcador, solo actualizamos su posición
+                    } else {
+                        userMarker = L.circleMarker(pos, {
+                            radius: 8,
+                            fillColor: '#ff0000',
+                            color: '#ff0000',
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 1
+                        }).addTo(map);
+                    }
                 },
                 () => {
                     alert('Error al obtener la ubicación.');
@@ -136,16 +145,12 @@
         }
     }
 
-    // Llama a showMap cuando se carga la página
-    window.onload = showMap;
-
-    // Función para generar un código QR con la URL que incluye lat y lon
     function generateQRCode() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
-                const url = `https://andreweb10.github.io/delivery/`; // Cambia esto a tu dominio y página
+                const url = `https://andreweb10.github.io/delivery/`; // Cambia esto a tu dominio
                 $('#qrcode').empty(); // Limpia el contenedor de QR
                 const qrcode = new QRCode(document.getElementById("qrcode"), {
                     text: url,
@@ -164,6 +169,7 @@
 
 </body>
 </html>
+
 
 
 
