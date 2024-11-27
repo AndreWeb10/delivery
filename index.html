@@ -188,8 +188,14 @@
     }
 
     function startMovingMarker(userPos) {
-        // Crear el marcador azul en la ubicación exacta del usuario
-        movingMarker = L.marker(userPos, { color: 'blue' }).addTo(map);
+        // Desplazar el marcador azul 0.0001 grados hacia el noreste para que empiece ligeramente alejado
+        let offsetPos = {
+            lat: userPos.lat + 0.0001,  // Desplazamiento hacia el norte
+            lng: userPos.lng + 0.0001   // Desplazamiento hacia el este
+        };
+
+        // Crear el marcador azul en la nueva ubicación desplazada
+        movingMarker = L.marker(offsetPos, { color: 'blue' }).addTo(map);
 
         // Guardar la ubicación real del usuario para mover el marcador
         destinationLatLng = userPos;
