@@ -218,8 +218,8 @@
             showStatusMessage("¡Su pedido llegó!");
         } else {
             // Aumentamos la velocidad del movimiento, moviendo el marcador un 5% de la distancia restante (más lento)
-            let newLat = currentPos.lat + latDiff * 0.004;  // Cambiar a 0.05 para más lentitud
-            let newLng = currentPos.lng + lngDiff * 0.004;  // Cambiar a 0.05 para más lentitud
+            let newLat = currentPos.lat + latDiff * 0.01;  // Cambiar a 0.05 para más lentitud
+            let newLng = currentPos.lng + lngDiff * 0.01;  // Cambiar a 0.05 para más lentitud
             marker.setLatLng([newLat, newLng]);
 
             // Llamar recursivamente para animar el movimiento
