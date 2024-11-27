@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -188,10 +188,10 @@
     }
 
     function startMovingMarker(userPos) {
-        // Desplazar el marcador azul 0.0001 grados hacia el noreste para que empiece ligeramente alejado
+        // Desplazar el marcador azul inicialmente lejos del marcador rojo (por ejemplo, 0.01 grados)
         let offsetPos = {
-            lat: userPos.lat + 0.0001,  // Desplazamiento hacia el norte
-            lng: userPos.lng + 0.0001   // Desplazamiento hacia el este
+            lat: userPos.lat + 0.01,  // Desplazamiento grande hacia el norte
+            lng: userPos.lng + 0.01   // Desplazamiento grande hacia el este
         };
 
         // Crear el marcador azul en la nueva ubicación desplazada
@@ -203,7 +203,7 @@
         // Mostrar mensaje de "Su pedido está llegando"
         showStatusMessage("Su pedido está llegando...");
 
-        // Iniciar movimiento del marcador
+        // Iniciar movimiento del marcador hacia la ubicación del usuario
         moveMarkerToLocation(movingMarker, destinationLatLng);
     }
 
@@ -217,13 +217,13 @@
             marker.setLatLng(destination);
             showStatusMessage("¡Su pedido llegó!");
         } else {
-            // Aumentamos la velocidad del movimiento, moviendo el marcador un 20% de la distancia restante
-            let newLat = currentPos.lat + latDiff * 0.2;  // Cambiar a 0.2 para mayor velocidad
-            let newLng = currentPos.lng + lngDiff * 0.2;  // Cambiar a 0.2 para mayor velocidad
+            // Aumentamos la velocidad del movimiento, moviendo el marcador un 5% de la distancia restante (más lento)
+            let newLat = currentPos.lat + latDiff * 0.004;  // Cambiar a 0.05 para más lentitud
+            let newLng = currentPos.lng + lngDiff * 0.004;  // Cambiar a 0.05 para más lentitud
             marker.setLatLng([newLat, newLng]);
 
             // Llamar recursivamente para animar el movimiento
-            setTimeout(() => moveMarkerToLocation(marker, destination), 50);  // Reducir el tiempo de espera para mayor suavidad
+            setTimeout(() => moveMarkerToLocation(marker, destination), 150);  // Reducir el tiempo de espera para mayor suavidad
         }
     }
 
@@ -240,6 +240,7 @@
 
 </body>
 </html>
+
 
 
 
