@@ -36,7 +36,6 @@
             flex: 1;
             width: 100%;
             height: 100%;
-            display: none; /* El mapa estará oculto inicialmente */
         }
         #search {
             margin: 10px;
@@ -56,15 +55,6 @@
             padding: 10px;
             background-color: rgba(241, 241, 241, 0.8);
         }
-        #viewMapButton {
-            margin: 10px;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
         #statusMessage {
             position: fixed;
             bottom: 20px;
@@ -82,17 +72,12 @@
 
 <header>
     <h1>Ubicación del pedido</h1>
-    <nav>
-        <a href="#map" onclick="showMap()">Mapa</a>
-    </nav>
 </header>
 
 <div id="search">
     <input type="text" id="codeInput" maxlength="4" placeholder="Ingresa el código (4 dígitos)" />
     <button onclick="setCode()">Aceptar Código</button>
 </div>
-
-<button id="viewMapButton" onclick="requestLocation()">Ver Mapa</button>
 
 <div id="map"></div>
 
@@ -110,8 +95,8 @@
     let codeAccepted = false;
     let map; // Variable global para el mapa
 
-    // Función que solicita la ubicación del usuario y carga el mapa
-    function requestLocation() {
+    // Función que inicializa el mapa automáticamente con la ubicación del usuario
+    function initializeMap() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
@@ -141,10 +126,6 @@
                             fillOpacity: 1
                         }).addTo(map);
                     }
-
-                    // Mostrar el mapa después de obtener la ubicación
-                    document.getElementById('map').style.display = 'block';
-                    document.getElementById('viewMapButton').style.display = 'none';
 
                     // Si el código fue aceptado, mover el marcador azul hacia la ubicación del usuario
                     if (codeAccepted && movingMarker) {
@@ -227,6 +208,9 @@
         statusMessage.textContent = message;
         statusMessage.style.display = 'block';
     }
+
+    // Inicializar el mapa al cargar la página
+    window.onload = initializeMap;
 </script>
 
 </body>
