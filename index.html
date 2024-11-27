@@ -66,6 +66,27 @@
             border-radius: 5px;
             display: none; /* Oculto inicialmente */
         }
+        #legend {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            z-index: 1000;
+        }
+        #legend p {
+            margin: 0;
+            padding: 5px;
+        }
+        #legend .red {
+            color: red;
+        }
+        #legend .blue {
+            color: blue;
+        }
     </style>
 </head>
 <body>
@@ -82,6 +103,11 @@
 <div id="map"></div>
 
 <div id="statusMessage"></div>
+
+<div id="legend">
+    <p><span class="red">●</span> Tu ubicación</p>
+    <p><span class="blue">●</span> Pedido en camino</p>
+</div>
 
 <footer>
     <p>&copy; 2024 Mapa en Tiempo Real</p>
@@ -127,11 +153,6 @@
                         }).addTo(map);
                     }
 
-                    // Si el código fue aceptado, mover el marcador azul hacia la ubicación del usuario
-                    if (codeAccepted && movingMarker) {
-                        moveMarkerToLocation(movingMarker, pos);
-                    }
-
                     // Si el código fue aceptado, empezar a mover el marcador azul
                     if (codeAccepted && !movingMarker) {
                         startMovingMarker(pos);
@@ -159,18 +180,16 @@
         if (code.length === 4 && !isNaN(code)) {
             codeAccepted = true;
             document.getElementById('codeInput').disabled = true;
-            startMovingMarker();
+            // Solo se inicia el marcador azul si el código es válido
+            startMovingMarker(userMarker.getLatLng());
         } else {
             alert('Por favor, ingresa un código válido de 4 dígitos.');
         }
     }
 
     function startMovingMarker(userPos) {
-        // Aquí usamos directamente la posición del usuario sin variación aleatoria
-        const initialPos = userPos;  // Posición exacta del usuario
-
         // Crear el marcador azul en la ubicación exacta del usuario
-        movingMarker = L.marker(initialPos, { color: 'blue' }).addTo(map);
+        movingMarker = L.marker(userPos, { color: 'blue' }).addTo(map);
 
         // Guardar la ubicación real del usuario para mover el marcador
         destinationLatLng = userPos;
