@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
 
     <style>
+        /* Estilo general del cuerpo */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -22,14 +23,15 @@
             background-size: cover;
             background-position: center;
         }
+    
+        /* Encabezado */
         header {
             background-color: rgba(255, 99, 71, 0.8);
             color: white;
             padding: 10px;
             text-align: center;
         }
-
-        /* Estilo del encabezado h1 con la fuente Delius */
+    
         header h1 {
             font-family: 'Delius', cursive; /* Fuente Delius */
             font-size: 36px;
@@ -37,38 +39,47 @@
             color: #000000ec; /* Color dorado */
             text-transform: uppercase;
         }
-
+    
+        /* Navegación */
         nav {
             margin: 10px;
         }
+    
         nav a {
             margin: 0 15px;
             color: white;
             text-decoration: none;
         }
+    
+        /* Mapa */
         #map {
             flex: 1;
             width: 100%;
             height: 100%;
         }
+    
+        /* Búsqueda de código */
         #search {
-            margin: 10px;
+            margin: 20px auto;
             display: flex;
             justify-content: center;
+            flex-wrap: wrap;
         }
-        #search input {
+    
+        #search input, #search button {
             padding: 10px;
-            margin-right: 5px;
+            margin: 5px;
             font-size: 16px;
         }
-        #search button {
-            padding: 10px;
-        }
+    
+        /* Pie de página */
         footer {
             text-align: center;
             padding: 10px;
             background-color: rgba(241, 241, 241, 0.8);
         }
+    
+        /* Mensaje de estado */
         #statusMessage {
             position: fixed;
             bottom: 20px;
@@ -80,49 +91,81 @@
             border-radius: 5px;
             display: none;
         }
+    
+        /* Leyenda */
         #legend {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             font-size: 14px;
             z-index: 1000;
+            max-width: 90%;
         }
+    
         #legend p {
             margin: 0;
             padding: 5px;
         }
+    
         #legend .red {
             color: red;
         }
+    
         #legend .blue {
             color: blue;
         }
+    
+        /* Cuadro de contacto */
         #contactBox {
             position: fixed;
-            top: 10px;
-            left: 10px;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 15px;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             z-index: 1000;
+            width: 90%;
+            max-width: 300px;
         }
+    
         #contactBox img {
-            width: 259px;
-            height: 136px;
+            width: 100%;
+            height: auto;
             object-fit: cover;
             border-radius: 8px;
         }
+    
         #contactBox p {
             margin: 10px 0 0;
             font-size: 16px;
             font-weight: bold;
         }
+    
+        /* Responsividad para pantallas pequeñas */
+        @media (max-width: 768px) {
+            #contactBox {
+                top: 10px;
+                left: 10px;
+                padding: 8px;
+            }
+    
+            #legend {
+                bottom: 10px;
+                right: 10px;
+                padding: 8px;
+            }
+    
+            #search input, #search button {
+                font-size: 14px;
+            }
+        }
     </style>
+    
 </head>
 <body>
 
@@ -279,7 +322,20 @@ function moveMarkerToLocation(marker, destination) {
     if (Math.abs(latDiff) < 0.0001 && Math.abs(lngDiff) < 0.0001) {
         marker.setLatLng(destination);
         showStatusMessage("¡Su pedido llegó!");
-        sound.play();  // Reproducir sonido cuando el pedido llegue
+
+        // Reproducir sonido hasta 6 veces
+        let playCount = 0; // Inicializamos el contador
+        const maxPlays = 6; // Número máximo de repeticiones
+
+        // Función para reproducir el sonido en intervalos
+        const playSoundInterval = setInterval(() => {
+            if (playCount < maxPlays) {
+                sound.play(); // Reproducir el sonido
+                playCount++;
+            } else {
+                clearInterval(playSoundInterval); // Detener el intervalo después de 6 repeticiones
+            }
+        }, 1000); // Intervalo de 1 segundo entre cada reproducción
     } else {
         let newLat = currentPos.lat + latDiff * 0.09;
         let newLng = currentPos.lng + lngDiff * 0.09;
@@ -289,11 +345,11 @@ function moveMarkerToLocation(marker, destination) {
     }
 }
 
-    function showStatusMessage(message) {
-        const statusMessage = document.getElementById('statusMessage');
-        statusMessage.textContent = message;
-        statusMessage.style.display = 'block';
-    }
+function showStatusMessage(message) {
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.textContent = message;
+    statusMessage.style.display = 'block';
+}
 
     window.onload = initializeMap;
 </script>
