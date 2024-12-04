@@ -30,25 +30,86 @@
             color: white;
             padding: 10px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1000;
         }
     
         header h1 {
             font-family: 'Delius', cursive; /* Fuente Delius */
-            font-size: 36px;
+            font-size: 30px;
             font-weight: normal;
             color: #000000ec; /* Color dorado */
             text-transform: uppercase;
+            margin: 0;
         }
     
-        /* Navegación */
-        nav {
-            margin: 10px;
+        /* Cuadro de contacto */
+        #contactBox {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: 10px; /* Más arriba */
+            left: 10px;
+            z-index: 1000;
         }
     
-        nav a {
-            margin: 0 15px;
+        #contactBox img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    
+        #contactBox p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+    
+        /* Contenedor del ingreso del código */
+        #search {
+            margin: auto; /* Centrar verticalmente */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+    
+        #search input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    
+        #search button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: rgba(255, 99, 71, 0.8);
             color: white;
-            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    
+        #search button:hover {
+            background-color: rgba(255, 99, 71, 1);
         }
     
         /* Mapa */
@@ -56,40 +117,6 @@
             flex: 1;
             width: 100%;
             height: 100%;
-        }
-    
-        /* Búsqueda de código */
-        #search {
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-    
-        #search input, #search button {
-            padding: 10px;
-            margin: 5px;
-            font-size: 16px;
-        }
-    
-        /* Pie de página */
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: rgba(241, 241, 241, 0.8);
-        }
-    
-        /* Mensaje de estado */
-        #statusMessage {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
         }
     
         /* Leyenda */
@@ -103,7 +130,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             font-size: 14px;
             z-index: 1000;
-            max-width: 90%;
         }
     
         #legend p {
@@ -119,52 +145,23 @@
             color: blue;
         }
     
-        /* Cuadro de contacto */
-        #contactBox {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            width: 90%;
-            max-width: 300px;
-        }
-    
-        #contactBox img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-    
-        #contactBox p {
-            margin: 10px 0 0;
-            font-size: 16px;
-            font-weight: bold;
-        }
-    
         /* Responsividad para pantallas pequeñas */
         @media (max-width: 768px) {
+            header h1 {
+                font-size: 22px;
+            }
+    
             #contactBox {
-                top: 10px;
-                left: 10px;
-                padding: 8px;
+                top: 5px;
+                left: 5px;
             }
     
-            #legend {
-                bottom: 10px;
-                right: 10px;
-                padding: 8px;
-            }
-    
-            #search input, #search button {
-                font-size: 14px;
+            #search {
+                width: 90%;
             }
         }
     </style>
+    
     
 </head>
 <body>
@@ -192,9 +189,7 @@
     <p><span class="blue">●</span> Pedido en camino</p>
 </div>
 
-<footer>
-    <p>&copy; 2024 Mapa en Tiempo Real</p>
-</footer>
+
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
