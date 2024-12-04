@@ -210,49 +210,84 @@
         }
     }
 
-    function setCode() {
-        const code = document.getElementById('codeInput').value;
+    let usedCodes = []; // Array para almacenar los códigos ya utilizados
 
-        if (code.length === 4 && !isNaN(code)) {
+function setCode() {
+    const code = document.getElementById('codeInput').value;
+
+    // Validar que el código sea de 4 dígitos y no se haya usado antes
+    if (code.length === 4 && !isNaN(code)) {
+        if (usedCodes.includes(code)) {
+            showAlertMessage("Ingrese un código válido. Este código ya fue utilizado.");
+        } else {
+            usedCodes.push(code); // Guardar el código en la lista de utilizados
             codeAccepted = true;
             document.getElementById('codeInput').disabled = true;
             startMovingMarker(userMarker.getLatLng());
-        } else {
-            alert('Por favor, ingresa un código válido de 4 dígitos.');
         }
+    } else {
+        showAlertMessage("Por favor, ingrese un código válido de 4 dígitos.");
     }
+}
+
+function showAlertMessage(message) {
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.textContent = message;
+    statusMessage.style.display = 'block';
+
+    setTimeout(() => {
+        statusMessage.style.display = 'none';
+    }, 3000); // Ocultar el mensaje después de 3 segundos
+}
+
 
     function startMovingMarker(userPos) {
-        let offsetPos = {
-            lat: userPos.lat + 0.01,
+    const code = document.getElementById('codeInput').value;
+
+    // Cálculo de posición basado en el código
+    let offsetPos;
+    if (parseInt(code) % 2 === 0) { 
+        // Si el código es par, mover a la derecha
+        offsetPos = {
+            lat: userPos.lat,
             lng: userPos.lng + 0.01
         };
-
-        movingMarker = L.marker(offsetPos, { color: 'blue' }).addTo(map);
-
-        destinationLatLng = userPos;
-
-        showStatusMessage("Su pedido está llegando...");
-
-        moveMarkerToLocation(movingMarker, destinationLatLng);
+    } else { 
+        // Si el código es impar, mover a la izquierda
+        offsetPos = {
+            lat: userPos.lat,
+            lng: userPos.lng - 0.01
+        };
     }
 
-    function moveMarkerToLocation(marker, destination) {
-        let currentPos = marker.getLatLng();
-        let latDiff = destination.lat - currentPos.lat;
-        let lngDiff = destination.lng - currentPos.lng;
+    movingMarker = L.marker(offsetPos, { color: 'blue' }).addTo(map);
 
-        if (Math.abs(latDiff) < 0.0001 && Math.abs(lngDiff) < 0.0001) {
-            marker.setLatLng(destination);
-            showStatusMessage("¡Su pedido llegó!");
-        } else {
-            let newLat = currentPos.lat + latDiff * 0.01;
-            let newLng = currentPos.lng + lngDiff * 0.01;
-            marker.setLatLng([newLat, newLng]);
+    destinationLatLng = userPos;
 
-            setTimeout(() => moveMarkerToLocation(marker, destination), 150);
-        }
+    showStatusMessage("Su pedido está llegando...");
+
+    moveMarkerToLocation(movingMarker, destinationLatLng);
+}
+
+const sound = new Audio('https://on.soundcloud.com/UKBHADStdjuT4NJJA'); // Reemplaza con la URL de tu archivo de sonido
+
+function moveMarkerToLocation(marker, destination) {
+    let currentPos = marker.getLatLng();
+    let latDiff = destination.lat - currentPos.lat;
+    let lngDiff = destination.lng - currentPos.lng;
+
+    if (Math.abs(latDiff) < 0.0001 && Math.abs(lngDiff) < 0.0001) {
+        marker.setLatLng(destination);
+        showStatusMessage("¡Su pedido llegó!");
+        sound.play();  // Reproducir sonido cuando el pedido llegue
+    } else {
+        let newLat = currentPos.lat + latDiff * 0.09;
+        let newLng = currentPos.lng + lngDiff * 0.09;
+        marker.setLatLng([newLat, newLng]);
+
+        setTimeout(() => moveMarkerToLocation(marker, destination), 150);
     }
+}
 
     function showStatusMessage(message) {
         const statusMessage = document.getElementById('statusMessage');
@@ -265,6 +300,7 @@
 
 </body>
 </html>
+
 
 
 
