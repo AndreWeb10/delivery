@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa en Tiempo Real</title>
+    <title>MapaInfoDelivery</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
@@ -11,157 +11,173 @@
     <link href="https://fonts.googleapis.com/css2?family=Delius&display=swap" rel="stylesheet">
 
     <style>
-        /* Estilo general del cuerpo */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            background-image: url('https://img.freepik.com/foto-gratis/repartidor-alimentos-conduciendo-scooter-caja-comida-mascara-mascara_1303-27713.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-    
-        /* Encabezado */
-        header {
-            background-color: rgba(255, 99, 71, 0.8);
-            color: white;
-            padding: 10px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 1000;
-        }
-    
+    /* Estilo general del cuerpo */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background-image: url('https://img.freepik.com/foto-gratis/repartidor-alimentos-conduciendo-scooter-caja-comida-mascara-mascara_1303-27713.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+    #statusMessage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 128, 0, 0.9); /* Fondo verde */
+    color: white;
+    padding: 15px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 2000;
+    display: none; /* Oculto inicialmente */
+}
+
+    /* Encabezado */
+    header {
+        background-color: rgba(255, 99, 71, 0.8);
+        color: white;
+        padding: 10px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 1000;
+    }
+
+    header h1 {
+        font-family: 'Delius', cursive; /* Fuente Delius */
+        font-size: 30px;
+        font-weight: normal;
+        color: #000000ec; /* Color dorado */
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    /* Cuadro de contacto */
+    #contactBox {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        top: 10px; /* Más arriba */
+        left: 10px;
+        z-index: 1000;
+    }
+
+    #contactBox img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    #contactBox p {
+        margin: 0;
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* Contenedor del ingreso del código */
+    #search {
+        margin: auto; /* Centrar verticalmente */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+    }
+
+    #search input {
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        width: 200px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #search button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: rgba(255, 99, 71, 0.8);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    #search button:hover {
+        background-color: rgba(255, 99, 71, 1);
+    }
+
+    /* Mapa */
+    #map {
+        flex: 1;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Leyenda */
+    #legend {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        font-size: 14px;
+        z-index: 1000;
+    }
+
+    #legend p {
+        margin: 0;
+        padding: 5px;
+    }
+
+    #legend .red {
+        color: red;
+    }
+
+    #legend .blue {
+        color: blue;
+    }
+
+    /* Responsividad para pantallas pequeñas */
+    @media (max-width: 768px) {
         header h1 {
-            font-family: 'Delius', cursive; /* Fuente Delius */
-            font-size: 30px;
-            font-weight: normal;
-            color: #000000ec; /* Color dorado */
-            text-transform: uppercase;
-            margin: 0;
+            font-size: 22px;
         }
-    
-        /* Cuadro de contacto */
+
         #contactBox {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            position: absolute;
-            top: 10px; /* Más arriba */
-            left: 10px;
-            z-index: 1000;
+            top: 5px;
+            left: 5px;
         }
-    
-        #contactBox img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-    
-        #contactBox p {
-            margin: 0;
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-        }
-    
-        /* Contenedor del ingreso del código */
+
         #search {
-            margin: auto; /* Centrar verticalmente */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
+            width: 90%;
         }
-    
-        #search input {
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 10px;
-            width: 200px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-    
-        #search button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: rgba(255, 99, 71, 0.8);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    
-        #search button:hover {
-            background-color: rgba(255, 99, 71, 1);
-        }
-    
-        /* Mapa */
-        #map {
-            flex: 1;
-            width: 100%;
-            height: 100%;
-        }
-    
-        /* Leyenda */
-        #legend {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            font-size: 14px;
-            z-index: 1000;
-        }
-    
-        #legend p {
-            margin: 0;
-            padding: 5px;
-        }
-    
-        #legend .red {
-            color: red;
-        }
-    
-        #legend .blue {
-            color: blue;
-        }
-    
-        /* Responsividad para pantallas pequeñas */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 22px;
-            }
-    
-            #contactBox {
-                top: 5px;
-                left: 5px;
-            }
-    
-            #search {
-                width: 90%;
-            }
-        }
-    </style>
-    
+    }
+</style>
+
     
 </head>
 <body>
